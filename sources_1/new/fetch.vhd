@@ -110,7 +110,7 @@ begin
         elsif rising_edge(clk) then
 
             if redirect_valid = '1' then
-                pc <= redirect_target(15 downto 2) & "00";
+                pc <= redirect_target(15 downto 1) & "0";
 
             elsif stall = '0' then
                 pc <= std_logic_vector(unsigned(pc) + 4);

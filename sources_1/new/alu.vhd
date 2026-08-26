@@ -187,11 +187,16 @@ begin
                 else
                     v_wb_zf_data := '0';
                 end if;
-            elsif is_branch = '1' then
+            end if;
+
+            if is_branch = '1' then
                 v_ex_is_branch := '1';
                 branch_target_u := pc_u + shift_left(imm_u, 1);
 
                 case branch_type is
+                    when "0000" | "0001" | "0010"  | "0011" =>
+                        v_ex_branch_taken := v_wb_valid;
+                        v_ex_branch_target := v_wb_data;
                     when "1000" =>
                         if src1_value = src2_value then
                             v_ex_branch_taken := '1';
