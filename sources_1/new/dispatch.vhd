@@ -622,20 +622,34 @@ begin
                     v_d0_src2_tag := to_slv(0, 4);
                     v_d0_src2_value := to_slv(0, 16);
                 else
-                    v_d0_src1_rrf := s0_1_rrf;
-                    v_d0_src1_ready := s0_1_ready;
-                    v_d0_src1_tag := s0_1_tag;
-                    v_d0_src1_value := s0_1_val;
+                    if (dec0_src1 = "000") then
+                        v_d0_src1_rrf := '0';
+                        v_d0_src1_ready := '1';
+                        v_d0_src1_tag := to_slv(0, 4);
+                        v_d0_src1_value := dec0_pc;
+                    else
+                        v_d0_src1_rrf := s0_1_rrf;
+                        v_d0_src1_ready := s0_1_ready;
+                        v_d0_src1_tag := s0_1_tag;
+                        v_d0_src1_value := s0_1_val;
+                    end if;
                     if (dec0_load = '1') or (dec0_is_adi = '1') or ((dec0_is_branch = '1') and (dec0_branch_type = to_slv(13, 4))) or ((dec0_is_branch = '1') and (dec0_branch_type = to_slv(15, 4))) then
                         v_d0_src2_rrf := '0';
                         v_d0_src2_ready := '1';
                         v_d0_src2_tag := to_slv(0, 4);
                         v_d0_src2_value := to_slv(0, 16);
                     else
-                        v_d0_src2_rrf := s0_2_rrf;
-                        v_d0_src2_ready := s0_2_ready;
-                        v_d0_src2_tag := s0_2_tag;
-                        v_d0_src2_value := s0_2_val;
+                        if (dec0_src2 = "000") then
+                            v_d0_src2_rrf := '0';
+                            v_d0_src2_ready := '1';
+                            v_d0_src2_tag := to_slv(0, 4);
+                            v_d0_src2_value := dec0_pc;
+                        else
+                            v_d0_src2_rrf := s0_2_rrf;
+                            v_d0_src2_ready := s0_2_ready;
+                            v_d0_src2_tag := s0_2_tag;
+                            v_d0_src2_value := s0_2_val;
+                        end if;
                     end if;
                 end if;
             end if;
@@ -699,20 +713,34 @@ begin
                     v_d1_src2_tag := to_slv(0, 4);
                     v_d1_src2_value := to_slv(0, 16);
                 else
-                    v_d1_src1_rrf := s1_1_rrf;
-                    v_d1_src1_ready := s1_1_ready;
-                    v_d1_src1_tag := s1_1_tag;
-                    v_d1_src1_value := s1_1_val;
+                    if (dec1_src1 = "000") then
+                        v_d1_src1_rrf := '0';
+                        v_d1_src1_ready := '1';
+                        v_d1_src1_tag := to_slv(0, 4);
+                        v_d1_src1_value := dec1_pc;
+                    else
+                        v_d1_src1_rrf := s1_1_rrf;
+                        v_d1_src1_ready := s1_1_ready;
+                        v_d1_src1_tag := s1_1_tag;
+                        v_d1_src1_value := s1_1_val;
+                    end if;
                     if (dec1_load = '1') or (dec1_is_adi = '1') or ((dec1_is_branch = '1') and (dec1_branch_type = to_slv(13, 4))) or ((dec1_is_branch = '1') and (dec1_branch_type = to_slv(15, 4))) then
                         v_d1_src2_rrf := '0';
                         v_d1_src2_ready := '1';
                         v_d1_src2_tag := to_slv(0, 4);
                         v_d1_src2_value := to_slv(0, 16);
                     else
-                        v_d1_src2_rrf := s1_2_rrf;
-                        v_d1_src2_ready := s1_2_ready;
-                        v_d1_src2_tag := s1_2_tag;
-                        v_d1_src2_value := s1_2_val;
+                        if (dec1_src2 = "000") then
+                            v_d1_src2_rrf := '0';
+                            v_d1_src2_ready := '1';
+                            v_d1_src2_tag := to_slv(0, 4);
+                            v_d1_src2_value := dec1_pc;
+                        else
+                            v_d1_src2_rrf := s1_2_rrf;
+                            v_d1_src2_ready := s1_2_ready;
+                            v_d1_src2_tag := s1_2_tag;
+                            v_d1_src2_value := s1_2_val;
+                        end if;
                     end if;
                 end if;
             end if;

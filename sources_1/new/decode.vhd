@@ -252,8 +252,15 @@ begin
                     v_dec0_use_complement := func0(2);
                     v_dec0_src1 := ra0;
                     v_dec0_src2 := rb0;
-                    v_dec0_dest := rc0;
-                    v_dec0_dest_en := '1';
+                    -- v_dec0_dest := rc0;
+                    -- v_dec0_dest_en := '1';
+                    if (rc0 = "000") then
+                        v_dec0_is_branch := '1';
+                        v_dec0_branch_type := "0001";
+                    else
+                        v_dec0_dest := rc0;
+                        v_dec0_dest_en := '1';
+                    end if;
                     v_dec0_write_carry := '1';
                     v_dec0_write_zero := '1';
                 when "0000" =>
@@ -261,8 +268,15 @@ begin
                     v_dec0_is_adi := '1';
                     v_dec0_src1 := ra0;
                     v_dec0_src2 := rb0;
-                    v_dec0_dest := rb0;
-                    v_dec0_dest_en := '1';
+                    -- v_dec0_dest := rb0;
+                    -- v_dec0_dest_en := '1';
+                    if (rb0 = "000") then
+                        v_dec0_is_branch := '1';
+                        v_dec0_branch_type := "0000";
+                    else
+                        v_dec0_dest := rb0;
+                        v_dec0_dest_en := '1';
+                    end if;
                     v_dec0_imm := sxt6(imm6_0);
                 when "0010" =>
                     v_dec0_is_nand := '1';
@@ -271,19 +285,40 @@ begin
                     v_dec0_use_complement := func0(2);
                     v_dec0_src1 := ra0;
                     v_dec0_src2 := rb0;
-                    v_dec0_dest := rc0;
-                    v_dec0_dest_en := '1';
+                    -- v_dec0_dest := rc0;
+                    -- v_dec0_dest_en := '1';
+                    if (rc0 = "000") then
+                        v_dec0_is_branch := '1';
+                        v_dec0_branch_type := "0010";
+                    else
+                        v_dec0_dest := rc0;
+                        v_dec0_dest_en := '1';
+                    end if;
                     v_dec0_write_zero := '1';
                 when "0011" =>
                     v_dec0_lli := '1';
-                    v_dec0_dest := ra0;
-                    v_dec0_dest_en := '1';
+                    -- v_dec0_dest := ra0;
+                    -- v_dec0_dest_en := '1';
+                    if (ra0 = "000") then
+                        v_dec0_is_branch := '1';
+                        v_dec0_branch_type := "0011";
+                    else
+                        v_dec0_dest := ra0;
+                        v_dec0_dest_en := '1';
+                    end if;
                     v_dec0_imm := sxt9(imm9_0);
                 when "0100" =>
                     v_dec0_load := '1';
                     v_dec0_src1 := rb0;
-                    v_dec0_dest := ra0;
-                    v_dec0_dest_en := '1';
+                    -- v_dec0_dest := ra0;
+                    -- v_dec0_dest_en := '1';
+                    if (ra0 = "000") then
+                        v_dec0_is_branch := '1';
+                        v_dec0_branch_type := "0100";
+                    else
+                        v_dec0_dest := ra0;
+                        v_dec0_dest_en := '1';
+                    end if;
                     v_dec0_write_zero := '1';
                     v_dec0_imm := sxt6(imm6_0);
                 when "0101" =>
@@ -329,8 +364,15 @@ begin
                     v_dec1_use_complement := func1(2);
                     v_dec1_src1 := ra1;
                     v_dec1_src2 := rb1;
-                    v_dec1_dest := rc1;
-                    v_dec1_dest_en := '1';
+                    -- v_dec1_dest := rc1;
+                    -- v_dec1_dest_en := '1';
+                    if (rc1 = "000") then
+                        v_dec1_is_branch := '1';
+                        v_dec1_branch_type := "0001";
+                    else
+                        v_dec1_dest := rc1;
+                        v_dec1_dest_en := '1';
+                    end if;
                     v_dec1_write_carry := '1';
                     v_dec1_write_zero := '1';
                 when "0000" =>
@@ -338,8 +380,15 @@ begin
                     v_dec1_is_adi := '1';
                     v_dec1_src1 := ra1;
                     v_dec1_src2 := rb1;
-                    v_dec1_dest := rb1;
-                    v_dec1_dest_en := '1';
+                    -- v_dec1_dest := rb1;
+                    -- v_dec1_dest_en := '1';
+                    if (rb1 = "000") then
+                        v_dec1_is_branch := '1';
+                        v_dec1_branch_type := "0000";
+                    else
+                        v_dec1_dest := rb1;
+                        v_dec1_dest_en := '1';
+                    end if;
                     v_dec1_imm := sxt6(imm6_1);
                 when "0010" =>
                     v_dec1_is_nand := '1';
@@ -348,19 +397,40 @@ begin
                     v_dec1_use_complement := func1(2);
                     v_dec1_src1 := ra1;
                     v_dec1_src2 := rb1;
-                    v_dec1_dest := rc1;
-                    v_dec1_dest_en := '1';
+                    -- v_dec1_dest := rc1;
+                    -- v_dec1_dest_en := '1';
+                    if (rc1 = "000") then
+                        v_dec1_is_branch := '1';
+                        v_dec1_branch_type := "0010";
+                    else
+                        v_dec1_dest := rc1;
+                        v_dec1_dest_en := '1';
+                    end if;
                     v_dec1_write_zero := '1';
                 when "0011" =>
                     v_dec1_lli := '1';
-                    v_dec1_dest := ra1;
-                    v_dec1_dest_en := '1';
+                    -- v_dec1_dest := ra1;
+                    -- v_dec1_dest_en := '1';
+                    if (ra1 = "000") then
+                        v_dec1_is_branch := '1';
+                        v_dec1_branch_type := "0011";
+                    else
+                        v_dec1_dest := ra1;
+                        v_dec1_dest_en := '1';
+                    end if;
                     v_dec1_imm := sxt9(imm9_1);
                 when "0100" =>
                     v_dec1_load := '1';
                     v_dec1_src1 := rb1;
-                    v_dec1_dest := ra1;
-                    v_dec1_dest_en := '1';
+                    -- v_dec1_dest := ra1;
+                    -- v_dec1_dest_en := '1';
+                    if (ra1 = "000") then
+                        v_dec1_is_branch := '1';
+                        v_dec1_branch_type := "0100";
+                    else
+                        v_dec1_dest := ra1;
+                        v_dec1_dest_en := '1';
+                    end if;
                     v_dec1_write_zero := '1';
                     v_dec1_imm := sxt6(imm6_1);
                 when "0101" =>
