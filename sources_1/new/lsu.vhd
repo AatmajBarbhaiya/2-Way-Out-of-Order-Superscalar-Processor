@@ -38,6 +38,7 @@ entity lsu_stage is
         d0_imm        : in  std_logic_vector(15 downto 0);
         d0_dest_tag   : in  std_logic_vector(3 downto 0);
         d0_rob_idx    : in  std_logic_vector(3 downto 0);
+        d0_is_branch  : in std_logic;
 
         d1_lsu_fire   : in  std_logic;
         d1_is_load    : in  std_logic;
@@ -53,6 +54,7 @@ entity lsu_stage is
         d1_imm        : in  std_logic_vector(15 downto 0);
         d1_dest_tag   : in  std_logic_vector(3 downto 0);
         d1_rob_idx    : in  std_logic_vector(3 downto 0);
+        d1_is_branch  : in std_logic;
 
         wb_valid   : out std_logic;
         wb_tag     : out std_logic_vector(3 downto 0);
@@ -68,6 +70,9 @@ entity lsu_stage is
 
         ex_valid : out std_logic;
         ex_idx   : out std_logic_vector(3 downto 0);
+        ex_is_branch     : out std_logic;
+        ex_branch_taken  : out std_logic;
+        ex_branch_target : out std_logic_vector(15 downto 0);
 
         lsq_count : out std_logic_vector(4 downto 0)
     );
@@ -103,6 +108,7 @@ architecture rtl of lsu_stage is
 
         dest_tag  : idx_t;
         rob_idx   : idx_t;
+        dest_pc   : std_logic;
     end record;
 
     type entry_array_t is array (0 to DEPTH-1) of entry_t;
@@ -136,6 +142,9 @@ architecture rtl of lsu_stage is
 
     signal ex_valid_n : std_logic;
     signal ex_idx_n   : idx_t;
+    signal ex_is_branch_n     : std_logic;
+    signal ex_branch_taken_n  : std_logic;
+    signal ex_branch_target_n : std_logic_vector(15 downto 0);
 
     signal rd_en   : std_logic;
     signal wr_en   : std_logic;
@@ -332,6 +341,9 @@ begin
 
         variable ex_valid_v : std_logic;
         variable ex_idx_v   : idx_t;
+        variable ex_is_branch_v     : std_logic;
+        variable ex_branch_taken_v  : std_logic;
+        variable ex_branch_target_v : std_logic_vector(15 downto 0);
 
         variable rd_en_v   : std_logic;
         variable wr_en_v   : std_logic;
@@ -384,6 +396,9 @@ begin
 
         ex_valid_v := '0';
         ex_idx_v   := (others => '0');
+        ex_is_branch_v     := '0';
+        ex_branch_taken_v  := '0';
+        ex_branch_target_v := (others => '0');
 
         rd_en_v   := '0';
         wr_en_v   := '0';
@@ -575,9 +590,13 @@ begin
                     )) + unsigned(lsq_v(exec_idx_v).imm)
                 );
 
-                wb_valid_v := '1';
+                wb_valid_v := not lsq_v(exec_idx_v).dest_pc;
                 wb_tag_v   := lsq_v(exec_idx_v).dest_tag;
                 wb_data_v  := rd_data;
+
+                ex_is_branch_v     := lsq_v(exec_idx_v).dest_pc;
+                ex_branch_taken_v  := lsq_v(exec_idx_v).dest_pc;
+                ex_branch_target_v := rd_data;
 
                 wb_zf_valid_v := '1';
                 wb_zf_tag_v   := lsq_v(exec_idx_v).dest_tag;
@@ -676,6 +695,7 @@ begin
             lsq_v(alloc_idx).data     := (others => '0');
             lsq_v(alloc_idx).dest_tag := d0_dest_tag;
             lsq_v(alloc_idx).rob_idx  := d0_rob_idx;
+            lsq_v(alloc_idx).dest_pc  := d0_is_branch;
         end if;
 
         if (d1_lsu_fire = '1') and (free_count_v > ZERO_COUNT) then
@@ -734,6 +754,7 @@ begin
             lsq_v(alloc_idx).data     := (others => '0');
             lsq_v(alloc_idx).dest_tag := d1_dest_tag;
             lsq_v(alloc_idx).rob_idx  := d1_rob_idx;
+            lsq_v(alloc_idx).dest_pc  := d1_is_branch;
         end if;
 
         lsq_d <= lsq_v;
@@ -757,6 +778,9 @@ begin
 
         ex_valid_n <= ex_valid_v;
         ex_idx_n   <= ex_idx_v;
+        ex_is_branch_n     <= ex_is_branch_v;
+        ex_branch_taken_n  <= ex_branch_taken_v;
+        ex_branch_target_n <= ex_branch_target_v;
 
         rd_en   <= rd_en_v;
         rd_addr <= rd_addr_v;
@@ -806,7 +830,8 @@ begin
                               addr      => (others => '0'),
                               data      => (others => '0'),
                               dest_tag  => (others => '0'),
-                              rob_idx   => (others => '0'));
+                              rob_idx   => (others => '0'),
+                              dest_pc   => '0');
                 free_q(k) <= std_logic_vector(to_unsigned(k, IDX_W));
             end loop;
         elsif rising_edge(clk) then
@@ -828,6 +853,9 @@ begin
 
             ex_valid <= ex_valid_n;
             ex_idx   <= ex_idx_n;
+            ex_is_branch     <= ex_is_branch_n;
+            ex_branch_taken  <= ex_branch_taken_n;
+            ex_branch_target <= ex_branch_target_n;
 
             for k in 0 to DEPTH-1 loop
                 lsq_q(k)  <= lsq_d(k);

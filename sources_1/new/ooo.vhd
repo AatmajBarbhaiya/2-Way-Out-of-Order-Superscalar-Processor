@@ -310,6 +310,9 @@ architecture rtl of ooo is
     signal lsu_wb_cf_data   : std_logic;
     signal lsu_ex_valid     : std_logic;
     signal lsu_ex_idx       : word4_t;
+    signal lsu_ex_is_branch     :std_logic;
+    signal lsu_ex_branch_taken  :std_logic;
+    signal lsu_ex_branch_target :std_logic_vector(15 downto 0);
 
     signal rob_head_valid_s    : std_logic;
     signal rob_head_idx_s      : word4_t;
@@ -936,6 +939,7 @@ begin
             d0_imm            => d0_imm,
             d0_dest_tag       => d0_dest_tag,
             d0_rob_idx        => d0_rob_idx,
+            d0_is_branch      => d0_is_branch,
             d1_lsu_fire       => d1_lsu_fire,
             d1_is_load        => d1_load,
             d1_is_store       => d1_store,
@@ -950,6 +954,7 @@ begin
             d1_imm            => d1_imm,
             d1_dest_tag       => d1_dest_tag,
             d1_rob_idx        => d1_rob_idx,
+            d1_is_branch      => d1_is_branch,
             wb_valid          => lsu_wb_valid,
             wb_tag            => lsu_wb_tag,
             wb_data           => lsu_wb_data,
@@ -961,6 +966,9 @@ begin
             wb_cf_data        => lsu_wb_cf_data,
             ex_valid          => lsu_ex_valid,
             ex_idx            => lsu_ex_idx,
+            ex_is_branch      => lsu_ex_is_branch,
+            ex_branch_taken   => lsu_ex_branch_taken,
+            ex_branch_target  => lsu_ex_branch_target,
             lsq_count         => lsu_count
         );
 
@@ -1007,9 +1015,9 @@ begin
             ex1_branch_target  => alu1_ex_branch_target,
             ex2_valid          => lsu_ex_valid,
             ex2_idx            => lsu_ex_idx,
-            ex2_is_branch      => '0',
-            ex2_branch_taken   => '0',
-            ex2_branch_target  => (others => '0'),
+            ex2_is_branch      => lsu_ex_is_branch,
+            ex2_branch_taken   => lsu_ex_branch_taken,
+            ex2_branch_target  => lsu_ex_branch_target,
             commit0_valid      => commit0_valid_s,
             commit0_arch       => commit0_arch_s,
             commit0_tag        => commit0_tag_s,
