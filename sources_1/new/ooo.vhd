@@ -26,6 +26,7 @@ architecture rtl of ooo is
     signal fetch_valid1     : std_logic;
     signal fetch_pc_out     : word16_t;
     signal stall            : std_logic;
+    signal stall_fetch      : std_logic;
 
     signal dec0_valid          : std_logic;
     signal dec0_dest_en        : std_logic;
@@ -68,6 +69,8 @@ architecture rtl of ooo is
     signal dec1_is_branch       : std_logic;
     signal dec1_branch_type     : word4_t;
     signal dec1_pc              : word16_t;
+
+    signal decoder_busy : std_logic;
 
     signal rrf_count     : word5_t;
     signal cf_free_count : word5_t;
@@ -340,11 +343,14 @@ architecture rtl of ooo is
     signal commit1_zf_valid_s : std_logic;
     signal commit1_zf_tag_s   : word4_t;
 begin
+
+    stall_fetch <= stall or decoder_busy;
+
     u_fetch_stage : entity work.fetch_stage
         port map (
             clk             => clk,
             rst             => rst,
-            stall           => stall,
+            stall           => stall_fetch,
             redirect_valid  => redirect_valid,
             redirect_target => redirect_target,
             instr0          => fetch_instr0,
@@ -404,7 +410,8 @@ begin
             dec1_store          => dec1_store,
             dec1_is_branch      => dec1_is_branch,
             dec1_branch_type    => dec1_branch_type,
-            dec1_pc             => dec1_pc
+            dec1_pc             => dec1_pc,
+            decoder_busy        => decoder_busy
         );
 
     u_regfile : entity work.regfile
